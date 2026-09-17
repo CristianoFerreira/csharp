@@ -1,0 +1,15 @@
+bin/
+obj/
+*.user
+.vs/
+
+# IDE
+.idea/
+.vscode/
+
+# OS
+.DS_Store
+
+# Env / logs
+.env
+*.log

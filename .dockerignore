@@ -1,0 +1,9 @@
+bin/
+obj/
+tests/
+.vs/
+.idea/
+.vscode/
+*.user
+.DS_Store
+.git/
