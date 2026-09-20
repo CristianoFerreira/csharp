@@ -1,0 +1,63 @@
+# Deployment + Service no formato lido pelo pipeline genérico de CI/CD: o step
+# "deploy" reescreve o campo "image:" abaixo em memória antes do apply (o valor
+# inicial não importa) e aplica direto no cluster - este arquivo nunca é
+# alterado por nada além de você.
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: csharp
+  labels:
+    backstage.io/kubernetes-id: csharp
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: csharp
+  template:
+    metadata:
+      labels:
+        app: csharp
+        backstage.io/kubernetes-id: csharp
+    spec:
+      containers:
+        - name: csharp
+          image: csharp
+          ports:
+            - containerPort: 5001
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 5001
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            failureThreshold: 6
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: csharp
+  labels:
+    backstage.io/kubernetes-id: csharp
+spec:
+
+
+  type: NodePort
+
+
+  selector:
+    app: csharp
+  ports:
+    - port: 5001
+      targetPort: 5001
+
+
+      # nodePort omitido de propósito: o pipeline escolhe uma porta livre
+      # (31000-32767) no deploy e mostra o número no log.
+

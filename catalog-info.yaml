@@ -1,0 +1,19 @@
+# Registre este arquivo no Backstage (Catalog -> Register Existing Component,
+# apontando pra URL dele no seu repositório) pra este app aparecer no
+# catálogo com a aba Kubernetes já funcionando (anotação abaixo).
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: csharp
+  description: csharp descricao
+  annotations:
+    backstage.io/kubernetes-id: csharp
+    # Aponta pro Template que gerou este arquivo - templateInfo é um valor
+    # reservado do fetch:template, não um campo do form.
+    backstage.io/source-template: 
+    # Opcional: preencha pra habilitar a aba "CI/CD" (plugin GitHub Actions).
+    # github.com/project-slug: '<owner>/<repo>'
+spec:
+  type: service
+  lifecycle: experimental
+  owner: group:default/dev
