@@ -1,9 +1,18 @@
 # csharp
 
-Gerado pelo template "Aplicação genérica (a partir do Dockerfile)" do Backstage.
-Coloque `k8s.yaml` e `catalog-info.yaml` no seu repositório, ao lado do
-`Dockerfile` que você já tem (raiz, ou numa subpasta se for monorepo), e
-registre o app na página **Pipelines** do Backstage.
+Gerado pelo template "Aplicação genérica completa" do Backstage. Coloque todos os
+arquivos deste pacote na raiz do seu repositório (ou na subpasta informada ao
+registrar, se for monorepo) e registre o app na página **Pipelines** do Backstage.
+
+| Arquivo | Para quê |
+|---|---|
+| `Dockerfile` | O Dockerfile que você informou, sem alteração. |
+| `k8s.yaml` | `Deployment` + `Service` no formato lido pelo pipeline. |
+| `catalog-info.yaml` | Cadastro do app no catálogo do Backstage (Overview, Kubernetes, TechDocs). |
+| `mkdocs.yml` e `docs/` | A documentação do app (TechDocs), já com o que você informou. |
+
+Se o seu repositório já tem algum destes arquivos (principalmente o `Dockerfile`),
+compare antes de sobrescrever: o do repositório é a fonte da verdade.
 
 ## Contrato exigido pelo pipeline
 
@@ -34,11 +43,29 @@ O `Service` deste app é `type: NodePort` sem número: o pipeline escolhe uma
 porta livre (31000-32767) no deploy e a mantém nos deploys seguintes. O número
 aparece no log do deploy (página Pipelines, botão Log) e na aba Kubernetes.
 
+
 ## catalog-info.yaml
 
-Registre-o no Backstage (Catalog -> Register Existing Component, com a URL
-deste arquivo no seu repositório) para o app aparecer no catálogo com a aba
-Kubernetes já funcionando.
+O pipeline publica este arquivo no catálogo do Backstage a cada execução
+bem-sucedida (repositório público ou privado): o app aparece no catálogo, em poucos
+minutos, com a aba Kubernetes já funcionando. O `metadata.name` do Component precisa
+ser igual ao nome do app cadastrado em Pipelines. Não deixe nenhuma anotação do
+arquivo vazia: o pipeline recusa o arquivo (a execução falha, com o motivo no log) e
+o catálogo mantém a versão anterior.
+
+Dois campos ficam SEMPRE no arquivo para você conferir no final:
+
+- `spec.system: unknown`: o agrupamento em Systems ainda não foi definido pelo
+  negócio. Troque pelo System do seu app quando ele existir.
+- `spec.dependsOn`: os serviços da plataforma que o app usa. Vazio (`[]`) se você
+  não escolheu nenhum; complete se o app usar MinIO, Keycloak ou outro.
+
+## Documentação (TechDocs)
+
+`mkdocs.yml` e `docs/` são publicados pelo pipeline a cada execução bem-sucedida e
+aparecem na aba **TechDocs** do componente. Edite os `.md` em `docs/` e acrescente
+páginas no `nav` do `mkdocs.yml`. Se a geração falhar, a execução aparece como falha
+na página Pipelines e a última documentação publicada continua disponível.
 
 ## Tracing (opcional)
 

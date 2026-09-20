@@ -1,19 +1,34 @@
-# O Backstage registra este arquivo sozinho quando o pipeline do app é cadastrado
-# na página Pipelines (repositório público do GitHub), e a aba Kubernetes já vem
-# ligada pela anotação abaixo. Não deixe nenhuma anotação vazia: o catálogo
-# recusa o arquivo inteiro.
+# O pipeline publica este arquivo no catálogo do Backstage a cada execução
+# bem-sucedida (repositório público ou privado), e a aba Kubernetes já vem ligada
+# pela anotação backstage.io/kubernetes-id. A documentação (pasta docs/) aparece
+# na aba TechDocs pela anotação backstage.io/techdocs-ref. Não deixe nenhuma
+# anotação vazia: o pipeline recusa o arquivo (a execução falha com o motivo) e o
+# catálogo mantém a versão anterior.
 apiVersion: backstage.io/v1alpha1
 kind: Component
 metadata:
   name: csharp
-  description: csharp descricao
+  description: "csharp"
+  tags:
+    - "dotnet"
+    - "csharp"
+    - "api"
+    - "net80"
   annotations:
     backstage.io/kubernetes-id: csharp
-    # Template que gerou este arquivo.
-    backstage.io/source-template: template:default/generic-app-dockerfile
+    backstage.io/techdocs-ref: dir:.
+    # Template que gerou este arquivo (valor fixo vindo do template.yaml).
+    backstage.io/source-template: template:default/generic-app-completo
     # Opcional: preencha pra habilitar a aba "CI/CD" (plugin GitHub Actions).
     # github.com/project-slug: '<owner>/<repo>'
 spec:
   type: service
   lifecycle: experimental
-  owner: group:default/dev
+  owner: "group:default/dev"
+  # "unknown" DE PROPÓSITO: agrupar apps em Systems é uma decisão de negócio ainda
+  # não tomada. O campo fica sempre no arquivo para a pendência ficar visível;
+  # troque pelo System do seu app quando ele existir.
+  system: unknown
+  # Nenhum serviço da plataforma informado. Liste aqui os que o app usa, no
+  # formato resource:default/<nome> (ex.: resource:default/minio).
+  dependsOn: []

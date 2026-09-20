@@ -1,0 +1,7 @@
+site_name: "csharp"
+site_description: "csharp"
+nav:
+  - Início: index.md
+  - Operação: operacao.md
+plugins:
+  - techdocs-core
