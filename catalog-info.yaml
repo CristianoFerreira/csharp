@@ -32,3 +32,21 @@ spec:
   # Nenhum serviço da plataforma informado. Liste aqui os que o app usa, no
   # formato resource:default/<nome> (ex.: resource:default/minio).
   dependsOn: []
+  providesApis:
+    - csharp
+---
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: csharp
+  description: Contrato da API de csharp (Product API).
+spec:
+  type: openapi
+  lifecycle: experimental
+  owner: "group:default/dev"
+  system: unknown
+  # O pipeline extrai este arquivo de /app/openapi.json na imagem já buildada
+  # (gerado no Dockerfile, ver comentário lá) e substitui esta referência pelo
+  # conteúdo dele ao publicar no catálogo.
+  definition:
+    $text: ./openapi.json
