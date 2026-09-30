@@ -8,6 +8,12 @@ metadata:
   name: csharp
   labels:
     backstage.io/kubernetes-id: csharp
+
+  annotations:
+    # Endereço escolhido no template (tela Domínios). O step "deploy" do
+    # pipeline usa este host no Ingress em vez de <app>.<domínio padrão>.
+    platform.kubernet/host: "csharp.devagents.app"
+
 spec:
   replicas: 1
   selector:
